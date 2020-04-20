@@ -1,0 +1,24 @@
+title 0.6 New Note
+
+note over Browser:
+    User writes on text field
+    and click submit button
+end note
+
+note over Browser:
+    Callback function onSubmit
+    in spa.js gets invoked.
+    It performs the following
+    - create a note object with content and date.
+    - add the object to notes array
+    - clear the text field
+    - invoke redrawNotes() to display the updated notes
+    - send the note object as JSON to server
+end note
+
+Browser->Server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa with JSON data
+Server-->Browser: {"message":"note created"}
+
+note over Browser:
+    Callback function invoked
+    to console-log the response

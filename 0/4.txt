@@ -1,0 +1,29 @@
+title 0.4 New Note
+
+note over Browser:
+    User writes on text field
+    and click submit button
+end note
+
+Browser->Server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note with form data
+Server->Browser: Response Headers to redirect Browser to /notes
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/notes
+Server-->Browser: HTML code
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+Server-->Browser: main.css
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.js
+Server-->Browser: main.js
+
+note over Browser:
+    Browser executes main.js
+    containing AJAX call to /data.json
+end note
+
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+Server-->Browser: data.json
+
+note over Browser:
+    Browser continues executing main.js
+    invoking callback function of the AJAX call
+    to manipulate DOM and display the data
+end note

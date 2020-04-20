@@ -1,0 +1,23 @@
+title 0.5 Single Page App
+
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/
+Server-->Browser: HTML code
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+Server-->Browser: main.css
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa.js
+Server-->Browser: spa.js
+
+note over Browser:
+    Browser executes spa.js
+    containing AJAX call to /data.json
+end note
+
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+Server-->Browser: data.json
+
+note over Browser:
+    Browser continues executing main.js
+    invoking callback function of the AJAX call
+    which in turns invoke redrawNotes function
+    to manipulate DOM and display the data
+end note
