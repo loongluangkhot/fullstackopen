@@ -31,15 +31,23 @@ const App = () => {
   };
 
   const handleCreate = (person) => {
-    personsService.create(person).then((res) => {
-      setPersons(persons.concat(res));
-      setNewName("");
-      setNewNum("");
-      showNotif({
-        type: "success",
-        message: `Added ${res.name} to the phonebook!`,
+    personsService
+      .create(person)
+      .then((res) => {
+        setPersons(persons.concat(res));
+        setNewName("");
+        setNewNum("");
+        showNotif({
+          type: "success",
+          message: `Added ${res.name} to the phonebook!`,
+        });
+      })
+      .catch((err) => {
+        showNotif({
+          type: "error",
+          message: err.response.data
+        });
       });
-    });
   };
 
   const handleUpdate = (existedPerson) => {
@@ -192,7 +200,7 @@ const Notification = ({ data }) => {
       borderRadius: "10px",
       color: "green",
       padding: "10px",
-      margin: "10px"
+      margin: "10px",
     },
     error: {
       backgroundColor: "#EAEAEA",
@@ -200,7 +208,7 @@ const Notification = ({ data }) => {
       borderRadius: "10px",
       color: "red",
       padding: "10px",
-      margin: "10px"
+      margin: "10px",
     },
     none: {
       hidden: true,
