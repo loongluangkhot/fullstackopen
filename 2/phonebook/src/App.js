@@ -27,7 +27,6 @@ const App = () => {
     handleCreate({
       name: newName,
       number: newNum,
-      id: persons[persons.length - 1].id + 1,
     });
   };
 
