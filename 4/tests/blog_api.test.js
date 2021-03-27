@@ -56,7 +56,7 @@ describe("Blogs router", () => {
     const blog = res.body;
     expect(blog.likes).toBe(0);
   });
-  test.only("If title is missing, return 400", async () => {
+  test("If title is missing, return 400", async () => {
     const missingTitle = {
       author: "James Tan",
       url: "https://medium.com",
@@ -66,7 +66,7 @@ describe("Blogs router", () => {
     const blogs = await blogsInDb();
     expect(blogs).toHaveLength(sampleBlogs.length);
   });
-  test.only("If url is missing, return 400", async () => {
+  test("If url is missing, return 400", async () => {
     const missingUrl = {
       title: "New Blog",
       author: "James Tan",

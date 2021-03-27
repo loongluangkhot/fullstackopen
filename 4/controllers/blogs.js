@@ -16,4 +16,22 @@ router.post("", async (request, response) => {
   }
 });
 
+router.delete("/:id", async (request, response) => {
+  try {
+    await Blog.findByIdAndDelete(request.params.id);
+    response.status(204).end();
+  } catch (e) {
+    return response.status(400).json(e);
+  }
+});
+
+router.put("/:id", async (request, response) => {
+  try {
+    const blog = await Blog.findByIdAndUpdate(request.params.id, request.body, {new: true});
+    response.status(200).json(blog);
+  } catch (e) {
+    return response.status(400).json(e);
+  }
+})
+
 module.exports = router;
