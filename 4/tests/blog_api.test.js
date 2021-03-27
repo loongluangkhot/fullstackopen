@@ -2,14 +2,10 @@ const supertest = require("supertest");
 const mongoose = require("mongoose");
 const app = require("../app");
 const api = supertest(app);
-const { sampleBlogs, blogsInDb } = require("./test_helper");
-const Blog = require("../models/blog");
+const { initDb, sampleBlogs, blogsInDb } = require("./test_helper");
 
 beforeEach(async () => {
-  await Blog.deleteMany({});
-  const blogs = sampleBlogs.map((blog) => new Blog(blog));
-  const promiseArray = blogs.map((blog) => blog.save());
-  await Promise.all(promiseArray);
+  await initDb();
 });
 
 describe("Blogs router", () => {

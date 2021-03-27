@@ -2,14 +2,10 @@ const supertest = require("supertest");
 const mongoose = require("mongoose");
 const app = require("../app");
 const api = supertest(app);
-const { sampleUsers, usersInDb } = require("./test_helper");
-const User = require("../models/user");
+const { initDb, sampleUsers, usersInDb } = require("./test_helper");
 
 beforeEach(async () => {
-  await User.deleteMany({});
-  const users = sampleUsers.map((user) => new User(user));
-  const promiseArray = users.map((user) => user.save());
-  await Promise.all(promiseArray);
+  await initDb();
 });
 
 describe("Invalid users are not created", () => {

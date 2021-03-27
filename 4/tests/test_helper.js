@@ -1,6 +1,18 @@
 const Blog = require("../models/blog");
 const User = require("../models/user");
 
+const initDb = async () => {
+  await User.deleteMany({});
+  const users = sampleUsers.map((user) => new User(user));
+  const userPromiseArray = users.map((user) => user.save());
+  await Promise.all(userPromiseArray);
+
+  await Blog.deleteMany({});
+  const blogs = sampleBlogs.map((blog) => new Blog(blog));
+  const blogPromiseArray = blogs.map((blog) => blog.save());
+  await Promise.all(blogPromiseArray);
+}
+
 const sampleBlogs = [
   {
     _id: "5a422a851b54a676234d17f7",
@@ -9,6 +21,7 @@ const sampleBlogs = [
     url: "https://reactpatterns.com/",
     likes: 7,
     __v: 0,
+    user: "605f3bc385a29b2dd4ccb942",
   },
   {
     _id: "5a422aa71b54a676234d17f8",
@@ -18,6 +31,7 @@ const sampleBlogs = [
       "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
     likes: 5,
     __v: 0,
+    user: "605f3bc385a29b2dd4ccb943",
   },
   {
     _id: "5a422b3a1b54a676234d17f9",
@@ -26,6 +40,7 @@ const sampleBlogs = [
     url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
     likes: 12,
     __v: 0,
+    user: "605f3bc385a29b2dd4ccb943",
   },
   {
     _id: "5a422b891b54a676234d17fa",
@@ -35,6 +50,7 @@ const sampleBlogs = [
       "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
     likes: 10,
     __v: 0,
+    user: "605f3bc385a29b2dd4ccb944",
   },
   {
     _id: "5a422ba71b54a676234d17fb",
@@ -44,6 +60,7 @@ const sampleBlogs = [
       "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
     likes: 0,
     __v: 0,
+    user: "605f3bc385a29b2dd4ccb944",
   },
   {
     _id: "5a422bc61b54a676234d17fc",
@@ -52,6 +69,7 @@ const sampleBlogs = [
     url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
     likes: 2,
     __v: 0,
+    user: "605f3bc385a29b2dd4ccb944",
   },
 ];
 
@@ -62,22 +80,32 @@ const blogsInDb = async () => {
 
 const sampleUsers = [
   {
+    _id: "605f3bc385a29b2dd4ccb942",
     name: "Michael Chan",
     username: "michael_chan",
     passwordHash:
       "$2b$10$BTTzC3IMEp2Sl3GcXW3lwev6kkmtUQbYCYRF4gLynNAcME6VITx4u",
+    __v: 0,
+    blogs: ["5a422a851b54a676234d17f7"],
   },
   {
+    _id: "605f3bc385a29b2dd4ccb943",
     name: "Edsger W. Dijkstra",
     username: "edsger_w_dijkstra",
     passwordHash:
       "$2b$10$BTTzC3IMEp2Sl3GcXW3lwev6kkmtUQbYCYRF4gLynNAcME6VITx4u",
+    __v: 0,
+    blogs: ["5a422aa71b54a676234d17f8", "5a422b3a1b54a676234d17f9"],
+
   },
   {
+    _id: "605f3bc385a29b2dd4ccb944",
     name: "Robert C. Martin",
     username: "robert_c_martin",
     passwordHash:
       "$2b$10$BTTzC3IMEp2Sl3GcXW3lwev6kkmtUQbYCYRF4gLynNAcME6VITx4u",
+    __v: 0,
+    blogs: ["5a422b891b54a676234d17fa", "5a422ba71b54a676234d17fb", "5a422bc61b54a676234d17fc"]
   },
 ];
 
@@ -87,6 +115,7 @@ const usersInDb = async () => {
 };
 
 module.exports = {
+  initDb,
   sampleBlogs,
   blogsInDb,
   sampleUsers,
