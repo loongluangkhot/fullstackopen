@@ -2,7 +2,7 @@ const supertest = require("supertest");
 const mongoose = require("mongoose");
 const app = require("../app");
 const api = supertest(app);
-const { sampleBlogs } = require("./test_helper");
+const { sampleBlogs, blogsInDb } = require("./test_helper");
 const Blog = require("../models/blog");
 
 beforeEach(async () => {
@@ -56,19 +56,25 @@ describe("Blogs router", () => {
     const blog = res.body;
     expect(blog.likes).toBe(0);
   });
-  test.only("If title / url is missing, return 400", async () => {
+  test.only("If title is missing, return 400", async () => {
     const missingTitle = {
       author: "James Tan",
       url: "https://medium.com",
       likes: 5,
     };
+    const res = await api.post("/api/blogs").send(missingTitle).expect(400);
+    const blogs = await blogsInDb();
+    expect(blogs).toHaveLength(sampleBlogs.length);
+  });
+  test.only("If url is missing, return 400", async () => {
     const missingUrl = {
       title: "New Blog",
       author: "James Tan",
       likes: 5,
     };
-    await api.post("/api/blogs").send(missingTitle).expect(400);
-    await api.post("/api/blogs").send(missingUrl).expect(400);
+    const res = await api.post("/api/blogs").send(missingUrl).expect(400);
+    const blogs = await blogsInDb();
+    expect(blogs).toHaveLength(sampleBlogs.length);
   });
 });
 
