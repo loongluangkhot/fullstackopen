@@ -28,6 +28,48 @@ describe("Blogs router", () => {
     const blogs = res.body;
     blogs.forEach((blog) => expect(blog.id).toBeDefined());
   });
+  test("Save blog successfully", async () => {
+    const newBlog = {
+      title: "New Blog",
+      author: "James Tan",
+      url: "https://medium.com",
+      likes: 5,
+    };
+    const res = await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+    const blog = res.body;
+    expect(blog.title).toBe(newBlog.title);
+    expect(blog.author).toBe(newBlog.author);
+    expect(blog.url).toBe(newBlog.url);
+    expect(blog.likes).toBe(newBlog.likes);
+  });
+  test("Default likes to zero if not provided", async () => {
+    const newBlog = {
+      title: "New Blog",
+      author: "James Tan",
+      url: "https://medium.com",
+    };
+    const res = await api.post("/api/blogs").send(newBlog);
+    const blog = res.body;
+    expect(blog.likes).toBe(0);
+  });
+  test.only("If title / url is missing, return 400", async () => {
+    const missingTitle = {
+      author: "James Tan",
+      url: "https://medium.com",
+      likes: 5,
+    };
+    const missingUrl = {
+      title: "New Blog",
+      author: "James Tan",
+      likes: 5,
+    };
+    await api.post("/api/blogs").send(missingTitle).expect(400);
+    await api.post("/api/blogs").send(missingUrl).expect(400);
+  });
 });
 
 afterAll(() => {

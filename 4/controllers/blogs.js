@@ -7,9 +7,13 @@ router.get("", async (request, response) => {
 });
 
 router.post("", async (request, response) => {
-  const blog = new Blog(request.body);
-  const result = await blog.save();
-  response.status(201).json(result);
+  try {
+    const blog = new Blog(request.body);
+    const result = await blog.save();
+    return response.status(201).json(result);
+  } catch (e) {
+    return response.status(400).json(e);
+  }
 });
 
 module.exports = router;
