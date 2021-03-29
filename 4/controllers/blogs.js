@@ -1,8 +1,7 @@
 const router = require("express").Router();
-const jwt = require("jsonwebtoken");
 const Blog = require("../models/blog");
 const User = require("../models/user");
-const { JWT_SECRET } = require("../utils/config");
+
 
 router.get("", async (request, response) => {
   const blogs = await Blog.find({}).populate("user", {
@@ -14,8 +13,7 @@ router.get("", async (request, response) => {
 });
 
 router.post("", async (request, response) => {
-  const decodedToken = jwt.verify(request.token, JWT_SECRET);
-  const user = await User.findById(decodedToken.id);
+  const user = request.user;
   const blog = new Blog({
     ...request.body,
     user: user._id,
@@ -27,11 +25,20 @@ router.post("", async (request, response) => {
 });
 
 router.delete("/:id", async (request, response) => {
-  const deletedBlog = await Blog.findByIdAndDelete(request.params.id);
-  const user = await User.findById(deletedBlog.user);
-  user.blogs = user.blogs.filter((blogId) => blogId !== deletedBlog._id);
-  await user.save();
-  response.status(204);
+  const user = request.user;
+  const blogToDelete = await Blog.findById(request.params.id);
+  if (!blogToDelete) {
+    response.status(204).end();
+  } else if (blogToDelete.user.toString() === user.id) {
+    const deletedBlog = await Blog.findByIdAndDelete(request.params.id);
+    user.blogs = user.blogs.filter((blogId) => blogId !== deletedBlog._id);
+    await user.save();
+    response.status(204).end();
+  } else {
+    response
+      .status(401)
+      .json({ error: "blog can only be deleted by its creator" });
+  }
 });
 
 router.put("/:id", async (request, response) => {
