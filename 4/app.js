@@ -4,9 +4,11 @@ require("express-async-errors");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const config = require("./utils/config");
+const logger = require("./utils/logger");
+const loginRouter = require("./controllers/login");
 const userRouter = require("./controllers/users");
 const blogsRouter = require("./controllers/blogs");
-const logger = require("./utils/logger");
+const middleware = require("./utils/middleware");
 
 mongoose.connect(config.MONGODB_URI, {
   useNewUrlParser: true,
@@ -17,6 +19,8 @@ mongoose.connect(config.MONGODB_URI, {
 
 app.use(cors());
 app.use(express.json());
+app.use(middleware.tokenExtractor);
+app.use("/api/login", loginRouter);
 app.use("/api/users", userRouter);
 app.use("/api/blogs", blogsRouter);
 app.use("", (request, response) => {
@@ -25,6 +29,8 @@ app.use("", (request, response) => {
 app.use("", (error, request, response, next) => {
   if (error.name === "ValidationError") {
     response.status(400).json({ error: error.message });
+  } else if (error.name === "JsonWebTokenError") {
+    response.status(401).json({ error: "invalid or missing token" });
   }
   logger.error(error.message);
   next(error);
