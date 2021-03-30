@@ -1,5 +1,7 @@
 const Blog = require("../models/blog");
 const User = require("../models/user");
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../utils/config");
 
 const initDb = async () => {
   await User.deleteMany({});
@@ -11,7 +13,7 @@ const initDb = async () => {
   const blogs = sampleBlogs.map((blog) => new Blog(blog));
   const blogPromiseArray = blogs.map((blog) => blog.save());
   await Promise.all(blogPromiseArray);
-}
+};
 
 const sampleBlogs = [
   {
@@ -96,7 +98,6 @@ const sampleUsers = [
       "$2b$10$BTTzC3IMEp2Sl3GcXW3lwev6kkmtUQbYCYRF4gLynNAcME6VITx4u",
     __v: 0,
     blogs: ["5a422aa71b54a676234d17f8", "5a422b3a1b54a676234d17f9"],
-
   },
   {
     _id: "605f3bc385a29b2dd4ccb944",
@@ -105,7 +106,11 @@ const sampleUsers = [
     passwordHash:
       "$2b$10$BTTzC3IMEp2Sl3GcXW3lwev6kkmtUQbYCYRF4gLynNAcME6VITx4u",
     __v: 0,
-    blogs: ["5a422b891b54a676234d17fa", "5a422ba71b54a676234d17fb", "5a422bc61b54a676234d17fc"]
+    blogs: [
+      "5a422b891b54a676234d17fa",
+      "5a422ba71b54a676234d17fb",
+      "5a422bc61b54a676234d17fc",
+    ],
   },
 ];
 
@@ -114,10 +119,20 @@ const usersInDb = async () => {
   return users.map((user) => user.toJSON());
 };
 
+const getValidAuthToken = (user) => {
+  const userForToken = {
+    username: user.username,
+    id: user._id,
+  };
+  const token = jwt.sign(userForToken, JWT_SECRET);
+  return token;
+};
+
 module.exports = {
   initDb,
   sampleBlogs,
   blogsInDb,
   sampleUsers,
   usersInDb,
+  getValidAuthToken
 };

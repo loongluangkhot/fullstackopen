@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(middleware.tokenExtractor);
 app.use("/api/login", loginRouter);
 app.use("/api/users", userRouter);
-app.use("/api/blogs", middleware.userExtractor, blogsRouter);
+app.use("/api/blogs", blogsRouter);
 app.use("", (request, response) => {
   response.status(404).send({ error: "unknown endpoint" });
 });
