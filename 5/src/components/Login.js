@@ -10,7 +10,6 @@ export const Login = ({ setUser }) => {
     event.preventDefault();
 
     try {
-      console.log({ username, password });
       const user = await loginService.login({
         username,
         password,
@@ -29,6 +28,9 @@ export const Login = ({ setUser }) => {
   return (
     <div>
       <h1>Log into Application</h1>
+      {errorMessage && (
+        <p style={{ background: "red", color: "white" }}>{errorMessage}</p>
+      )}
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -50,9 +52,6 @@ export const Login = ({ setUser }) => {
         </div>
         <button type="submit">login</button>
       </form>
-      {errorMessage && (
-        <div style={{ background: "red", color: "white" }}>{errorMessage}</div>
-      )}
     </div>
   );
 };
