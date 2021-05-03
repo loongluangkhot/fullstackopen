@@ -20,8 +20,8 @@ const BlogsContainer = ({ user, onLogout }) => {
   };
 
   const sortBlogs = (blogs) => {
-    return blogs.sort((a,b) => b.likes - a.likes);
-  }
+    return blogs.sort((a, b) => b.likes - a.likes);
+  };
 
   const createBlog = async (blog) => {
     try {
@@ -45,13 +45,25 @@ const BlogsContainer = ({ user, onLogout }) => {
   const updateBlog = async (blog) => {
     try {
       const updatedBlog = await blogService.update(blog);
-      const updatedBlogs = blogs
-        .map((b) => {
-          if(b.id === blog.id) {
-            return updatedBlog;
-          }
-          return b;
-        });
+      const updatedBlogs = blogs.map((b) => {
+        if (b.id === blog.id) {
+          return updatedBlog;
+        }
+        return b;
+      });
+      setBlogs(sortBlogs(updatedBlogs));
+    } catch (e) {
+      setErrorMessage("Wrong credentials");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
+  };
+
+  const deleteBlog = async (blog) => {
+    try {
+      await blogService.remove(blog);
+      const updatedBlogs = blogs.filter((b) => b.id !== blog.id);
       setBlogs(sortBlogs(updatedBlogs));
     } catch (e) {
       setErrorMessage("Wrong credentials");
@@ -76,7 +88,7 @@ const BlogsContainer = ({ user, onLogout }) => {
         <BlogForm createBlog={createBlog} />
       </Toggleable>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog} />
       ))}
     </div>
   );
