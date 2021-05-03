@@ -11,7 +11,7 @@ const BlogsContainer = ({ user, onLogout }) => {
   const blogsContainerRef = useRef();
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
+    blogService.getAll().then((blogs) => setBlogs(sortBlogs(blogs)));
   }, []);
 
   const handleLogoutClick = (e) => {
@@ -19,10 +19,14 @@ const BlogsContainer = ({ user, onLogout }) => {
     onLogout();
   };
 
+  const sortBlogs = (blogs) => {
+    return blogs.sort((a,b) => b.likes - a.likes);
+  }
+
   const createBlog = async (blog) => {
     try {
       const createdBlog = await blogService.create(blog);
-      setBlogs([...blogs, createdBlog].sort((a, b) => b.likes - a.likes));
+      setBlogs(sortBlogs([...blogs, createdBlog]));
       blogsContainerRef.current.toggleActive();
       setNotif(
         `a new blog ${createdBlog.title} by ${createdBlog.author} added`
@@ -47,8 +51,8 @@ const BlogsContainer = ({ user, onLogout }) => {
             return updatedBlog;
           }
           return b;
-        }).sort((a, b) => b.likes - a.likes);
-      setBlogs(updatedBlogs);
+        });
+      setBlogs(sortBlogs(updatedBlogs));
     } catch (e) {
       setErrorMessage("Wrong credentials");
       setTimeout(() => {
