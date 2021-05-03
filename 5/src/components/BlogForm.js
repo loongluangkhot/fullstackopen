@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export const BlogForm = ({createBlog}) => {
+export const BlogForm = ({ createBlog }) => {
   const [blogTitle, setBlogTitle] = useState("");
   const [blogAuthor, setBlogAuthor] = useState("");
   const [blogUrl, setblogUrl] = useState("");
@@ -10,9 +10,9 @@ export const BlogForm = ({createBlog}) => {
     await createBlog({
       title: blogTitle,
       author: blogAuthor,
-      url: blogUrl
+      url: blogUrl,
     });
-  }
+  };
 
   return (
     <div>

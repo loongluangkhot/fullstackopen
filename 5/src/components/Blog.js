@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import loginService from "../services/login";
+import PropTypes from "prop-types";
 
-const Blog = ({ blog, updateBlog, deleteBlog: removeBlog }) => {
+const Blog = ({ blog, updateBlog, removeBlog }) => {
   const [showDetail, setShowDetail] = useState(false);
   const [authorized, setAuthorized] = useState(false);
 
@@ -69,6 +70,12 @@ const Blog = ({ blog, updateBlog, deleteBlog: removeBlog }) => {
       ) : null}
     </div>
   );
+};
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  updateBlog: PropTypes.func.isRequired,
+  removeBlog: PropTypes.func.isRequired,
 };
 
 export default Blog;

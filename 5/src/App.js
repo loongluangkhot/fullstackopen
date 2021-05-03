@@ -8,7 +8,7 @@ const App = () => {
 
   useEffect(() => {
     const loggedInUser = loginService.getCurrentlyLoginUser();
-    if(loggedInUser) {
+    if (loggedInUser) {
       setUser(loggedInUser);
     }
   }, []);
@@ -16,9 +16,13 @@ const App = () => {
   const handleLogout = () => {
     loginService.logout();
     setUser();
-  }
+  };
 
-  return user ? <BlogsContainer user={user} onLogout={handleLogout} /> : <Login setUser={setUser} />;
+  return user ? (
+    <BlogsContainer user={user} onLogout={handleLogout} />
+  ) : (
+    <Login setUser={setUser} />
+  );
 };
 
 export default App;

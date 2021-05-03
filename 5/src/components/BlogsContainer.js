@@ -60,7 +60,7 @@ const BlogsContainer = ({ user, onLogout }) => {
     }
   };
 
-  const deleteBlog = async (blog) => {
+  const removeBlog = async (blog) => {
     try {
       await blogService.remove(blog);
       const updatedBlogs = blogs.filter((b) => b.id !== blog.id);
@@ -88,7 +88,7 @@ const BlogsContainer = ({ user, onLogout }) => {
         <BlogForm createBlog={createBlog} />
       </Toggleable>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} removeBlog={removeBlog} />
       ))}
     </div>
   );
