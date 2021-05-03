@@ -11,20 +11,22 @@ const BlogsContainer = ({ user, onLogout }) => {
   const blogsContainerRef = useRef();
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    blogService.getAll().then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
   }, []);
 
   const handleLogoutClick = (e) => {
     e.preventDefault();
     onLogout();
-  }
+  };
 
   const createBlog = async (blog) => {
     try {
       const createdBlog = await blogService.create(blog);
-      setBlogs([...blogs, createdBlog]);
+      setBlogs([...blogs, createdBlog].sort((a, b) => b.likes - a.likes));
       blogsContainerRef.current.toggleActive();
-      setNotif(`a new blog ${createdBlog.title} by ${createdBlog.author} added`);
+      setNotif(
+        `a new blog ${createdBlog.title} by ${createdBlog.author} added`
+      );
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000);
@@ -34,23 +36,43 @@ const BlogsContainer = ({ user, onLogout }) => {
         setErrorMessage(null);
       }, 5000);
     }
-  }
+  };
+
+  const updateBlog = async (blog) => {
+    try {
+      const updatedBlog = await blogService.update(blog);
+      const updatedBlogs = blogs
+        .map((b) => {
+          if(b.id === blog.id) {
+            return updatedBlog;
+          }
+          return b;
+        }).sort((a, b) => b.likes - a.likes);
+      setBlogs(updatedBlogs);
+    } catch (e) {
+      setErrorMessage("Wrong credentials");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
+  };
 
   return (
     <div>
       <h2>blogs</h2>
-      {notif && (
-        <p style={{ background: "green", color: "white" }}>{notif}</p>
-      )}
+      {notif && <p style={{ background: "green", color: "white" }}>{notif}</p>}
       {errorMessage && (
         <p style={{ background: "red", color: "white" }}>{errorMessage}</p>
       )}
-      <p><span>{user.name} logged in</span><button onClick={handleLogoutClick}>logout</button></p>
+      <p>
+        <span>{user.name} logged in</span>
+        <button onClick={handleLogoutClick}>logout</button>
+      </p>
       <Toggleable buttonLabel="new note" ref={blogsContainerRef}>
         <BlogForm createBlog={createBlog} />
       </Toggleable>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
       ))}
     </div>
   );
