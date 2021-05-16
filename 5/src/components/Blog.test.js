@@ -5,10 +5,12 @@ import Blog from "./Blog";
 
 describe("<Blog />", () => {
   let component;
+  let updateBlog;
+  let removeBlog;
 
   beforeEach(() => {
-    const updateBlog = jest.fn();
-    const removeBlog = jest.fn();
+    updateBlog = jest.fn();
+    removeBlog = jest.fn();
     const blog = {
       user: {
         name: "name",
@@ -31,7 +33,7 @@ describe("<Blog />", () => {
     expect(blogElem).not.toHaveTextContent("url");
   });
 
-  test("renders blog's url & number of likes when 'view' button is clicked ", () => {
+  test("renders blog's url & number of likes when 'view' button is clicked", () => {
     const blogElem = component.container.querySelector(".blog");
     const showBtn = component.getByText("view");
     fireEvent.click(showBtn);
@@ -40,5 +42,17 @@ describe("<Blog />", () => {
     expect(blogElem).toHaveTextContent("author");
     expect(blogElem).toHaveTextContent("5");
     expect(blogElem).toHaveTextContent("url");
+  });
+
+  test("updateBlog is called twice when like btn is clicked twice", () => {
+    // const blogElem = component.container.querySelector(".blog");
+    const showBtn = component.getByText("view");
+    fireEvent.click(showBtn);
+
+    const likeBtn = component.getByText("like");
+    fireEvent.click(likeBtn);
+    fireEvent.click(likeBtn);
+
+    expect(updateBlog.mock.calls).toHaveLength(2);
   });
 });
