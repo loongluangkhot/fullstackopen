@@ -19,8 +19,9 @@ export const BlogForm = ({ createBlog }) => {
       <h3>create new</h3>
       <form onSubmit={handleBlogSubmit}>
         <div>
-          title
+          <label htmlFor="title">title</label>
           <input
+            id="title"
             type="text"
             value={blogTitle}
             name="Title"
@@ -28,8 +29,9 @@ export const BlogForm = ({ createBlog }) => {
           />
         </div>
         <div>
-          author
+          <label htmlFor="author">author</label>
           <input
+            id="author"
             type="text"
             value={blogAuthor}
             name="Author"
@@ -38,7 +40,9 @@ export const BlogForm = ({ createBlog }) => {
         </div>
         <div>
           url
+          <label htmlFor="url">url</label>
           <input
+            id="url"
             type="text"
             value={blogUrl}
             name="URL"
@@ -50,3 +54,5 @@ export const BlogForm = ({ createBlog }) => {
     </div>
   );
 };
+
+export default BlogForm;

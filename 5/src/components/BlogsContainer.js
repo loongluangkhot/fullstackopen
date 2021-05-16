@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Blog from "./Blog";
 import blogService from "../services/blogs";
 import { Toggleable } from "./Toggleable";
-import { BlogForm } from "./BlogForm";
+import BlogForm from "./BlogForm";
 
 const BlogsContainer = ({ user, onLogout }) => {
   const [blogs, setBlogs] = useState([]);
