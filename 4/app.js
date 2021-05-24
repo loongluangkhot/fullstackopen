@@ -23,6 +23,12 @@ app.use(middleware.tokenExtractor);
 app.use("/api/login", loginRouter);
 app.use("/api/users", userRouter);
 app.use("/api/blogs", blogsRouter);
+
+if (process.env.NODE_ENV === "test") {
+  const testRouter = require("./controllers/test");
+  app.use("/api/test", testRouter);
+}
+
 app.use("", (request, response) => {
   response.status(404).send({ error: "unknown endpoint" });
 });

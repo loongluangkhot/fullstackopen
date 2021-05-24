@@ -84,7 +84,7 @@ const BlogsContainer = ({ user, onLogout }) => {
         <span>{user.name} logged in</span>
         <button onClick={handleLogoutClick}>logout</button>
       </p>
-      <Toggleable buttonLabel="new note" ref={blogsContainerRef}>
+      <Toggleable buttonLabel="new blog" ref={blogsContainerRef}>
         <BlogForm createBlog={createBlog} />
       </Toggleable>
       {blogs.map((blog) => (

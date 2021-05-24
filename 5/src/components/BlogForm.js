@@ -39,7 +39,6 @@ export const BlogForm = ({ createBlog }) => {
           />
         </div>
         <div>
-          url
           <label htmlFor="url">url</label>
           <input
             id="url"
