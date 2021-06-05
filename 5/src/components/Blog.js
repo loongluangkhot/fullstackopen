@@ -48,22 +48,30 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
 
   return (
     <div className="blog" style={blogStyle}>
-      <div>
-        {blog.title} {blog.author}{" "}
-        <button onClick={() => toggleShowDetail()}>
+      <div className="blog-label">
+        <span
+          className="blog-title-author"
+          style={{ marginRight: "8px" }}
+        >{`${blog.title} ${blog.author}`}</span>
+        <button className="blog-view-button" onClick={() => toggleShowDetail()}>
           {showDetail ? "hide" : "view"}
         </button>
       </div>
       {showDetail ? (
-        <div>
-          <div>{blog.url}</div>
-          <div>
-            likes {blog.likes} <button onClick={handleLike}>like</button>
+        <div className="blog-info">
+          <div className="blog-url">{blog.url}</div>
+          <div className="blog-likes">
+            likes {blog.likes}{" "}
+            <button className="blog-like-button" onClick={handleLike}>
+              like
+            </button>
           </div>
-          <div>{blog.user.name}</div>
+          <div className="blog-username">{blog.user.name}</div>
           {authorized ? (
-            <div>
-              <button onClick={handleRemove}>remove</button>
+            <div className="blog-remove">
+              <button className="blog-remove-button" onClick={handleRemove}>
+                remove
+              </button>
             </div>
           ) : null}
         </div>
