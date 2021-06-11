@@ -1,6 +1,9 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { asObject } from "./reducers/anecdoteReducer";
+import {
+  createCreateAction,
+  createVoteAction,
+} from "./reducers/anecdoteReducer";
 
 const App = () => {
   const anecdotes = useSelector((state) => state);
@@ -8,21 +11,15 @@ const App = () => {
 
   const vote = (id) => {
     console.log("vote", id);
-    dispatch({
-      type: "VOTE",
-      data: { id },
-    });
+    dispatch(createVoteAction(id));
   };
 
-  const addAnecdote = (e) => {
+  const createAnecdote = (e) => {
     e.preventDefault();
     const content = e.target.anecdote.value;
-    console.log("add", content);
+    console.log("create", content);
     e.target.anecdote.value = "";
-    dispatch({
-      type: "NEW",
-      data: asObject(content),
-    });
+    dispatch(createCreateAction(content));
   };
 
   return (
@@ -40,7 +37,7 @@ const App = () => {
           </div>
         ))}
       <h2>create new</h2>
-      <form onSubmit={addAnecdote}>
+      <form onSubmit={createAnecdote}>
         <div>
           <input name="anecdote" />
         </div>
