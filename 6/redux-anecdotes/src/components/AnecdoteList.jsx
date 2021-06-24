@@ -5,6 +5,7 @@ import { showNotificationWithTimeout } from "../reducers/notificationReducer";
 
 function AnecdoteList() {
   const anecdotes = useSelector((state) => state.anecdotes);
+  const filter = useSelector(state => state.filter);
   const dispatch = useDispatch();
 
   const vote = (anecdote) => {
@@ -18,6 +19,7 @@ function AnecdoteList() {
   return (
     <div>
       {anecdotes
+        .filter(anecdote => anecdote.content.toLocaleLowerCase().includes(filter))
         .sort((a, b) => b.votes - a.votes)
         .map((anecdote) => (
           <div key={anecdote.id}>

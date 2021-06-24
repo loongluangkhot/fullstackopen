@@ -1,4 +1,4 @@
-const initialState = "Welcome!";
+const initialState = "";
 
 export const createSetNotificationAction = (message) => {
   return {
