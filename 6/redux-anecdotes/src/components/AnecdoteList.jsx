@@ -1,14 +1,18 @@
-import React from 'react'
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createVoteAction } from "../reducers/anecdoteReducer";
+import { showNotificationWithTimeout } from "../reducers/notificationReducer";
 
 function AnecdoteList() {
-  const anecdotes = useSelector((state) => state);
+  const anecdotes = useSelector((state) => state.anecdotes);
   const dispatch = useDispatch();
 
-  const vote = (id) => {
+  const vote = (anecdote) => {
+    const { id, content } = anecdote;
     console.log("vote", id);
     dispatch(createVoteAction(id));
+    const message = `you voted '${content}'`;
+    showNotificationWithTimeout(dispatch, message);
   };
 
   return (
@@ -20,12 +24,12 @@ function AnecdoteList() {
             <div>{anecdote.content}</div>
             <div>
               has {anecdote.votes}
-              <button onClick={() => vote(anecdote.id)}>vote</button>
+              <button onClick={() => vote(anecdote)}>vote</button>
             </div>
           </div>
         ))}
     </div>
-  )
+  );
 }
 
-export default AnecdoteList
+export default AnecdoteList;
