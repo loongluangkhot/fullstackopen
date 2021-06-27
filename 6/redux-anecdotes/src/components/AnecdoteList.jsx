@@ -11,7 +11,7 @@ function AnecdoteList() {
   const vote = (anecdote) => {
     const { id, content } = anecdote;
     console.log("vote", id);
-    dispatch(createVoteAction(id));
+    dispatch(createVoteAction(anecdote));
     const message = `you voted '${content}'`;
     showNotificationWithTimeout(dispatch, message);
   };

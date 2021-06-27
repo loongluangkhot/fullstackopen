@@ -1,9 +1,17 @@
 import anecdoteService from "../services/anecdotes";
 
-export const createVoteAction = (id) => {
-  return {
-    type: "VOTE",
-    data: { id },
+export const createVoteAction = (anecdote) => {
+  return async (dispatch) => {
+    const payload = {
+      ...anecdote,
+      votes: anecdote.votes + 1,
+    };
+    const upvotedAnecdote = await anecdoteService.edit(payload);
+    console.log(upvotedAnecdote);
+    dispatch({
+      type: "VOTE",
+      data: upvotedAnecdote,
+    });
   };
 };
 
@@ -32,15 +40,11 @@ const anecdoteReducer = (state = [], action) => {
   console.log("action", action);
   switch (action.type) {
     case "VOTE":
-      const id = action.data.id;
+      const upvotedAnecdote = action.data;
       let newState = [];
       state.forEach((anecdote) => {
-        if (anecdote.id === id) {
-          const updated = {
-            ...anecdote,
-            votes: anecdote.votes + 1,
-          };
-          newState.push(updated);
+        if (anecdote.id === upvotedAnecdote.id) {
+          newState.push(upvotedAnecdote);
         } else {
           newState.push(anecdote);
         }

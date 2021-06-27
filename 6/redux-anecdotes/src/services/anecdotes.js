@@ -13,7 +13,17 @@ const createNew = async (content) => {
   return res.data;
 };
 
-export default {
+const edit = async (anecdote) => {
+  const { id } = anecdote;
+  const putUrl = `${url}/${id}`;
+  const res = await axios.put(putUrl, anecdote);
+  return res.data;
+};
+
+const anecdoteService = {
   getAll,
   createNew,
+  edit,
 };
+
+export default anecdoteService;
