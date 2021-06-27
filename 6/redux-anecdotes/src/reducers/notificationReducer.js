@@ -1,17 +1,23 @@
 const initialState = "";
 
-export const createSetNotificationAction = (message) => {
-  return {
-    type: "SET_NOTIFICATION",
-    data: message,
+// Read more discussions on async with redux here: https://stackoverflow.com/questions/35411423/how-to-dispatch-a-redux-action-with-a-timeout
+let timeout;
+export const createSetNotificationAction = (message, delay = 5) => {
+  if (timeout) {
+    clearTimeout(timeout);
+  }
+  return async (dispatch) => {
+    dispatch({
+      type: "SET_NOTIFICATION",
+      data: message,
+    });
+    timeout = setTimeout(() => {
+      dispatch({
+        type: "REMOVE_NOTIFICATION",
+      });
+    }, delay * 1000);
   };
 };
-
-export const createRemoveNotificationAction = () => {
-  return {
-    type: "REMOVE_NOTIFICATION"
-  }
-}
 
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -23,17 +29,5 @@ const notificationReducer = (state = initialState, action) => {
       return state;
   }
 };
-
-// Read more discussions on async with redux here: https://stackoverflow.com/questions/35411423/how-to-dispatch-a-redux-action-with-a-timeout
-let timeout;
-export const showNotificationWithTimeout = (dispatch, message, delay = 5000) => {
-  if(timeout) {
-    clearTimeout(timeout);
-  }
-  dispatch(createSetNotificationAction(message));
-  timeout = setTimeout(() => {
-    dispatch(createRemoveNotificationAction());
-  }, delay);
-}
 
 export default notificationReducer;

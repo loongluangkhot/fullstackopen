@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createVoteAction } from "../reducers/anecdoteReducer";
-import { showNotificationWithTimeout } from "../reducers/notificationReducer";
+import { createSetNotificationAction } from "../reducers/notificationReducer";
 
 function AnecdoteList() {
   const anecdotes = useSelector((state) => state.anecdotes);
@@ -13,7 +13,7 @@ function AnecdoteList() {
     console.log("vote", id);
     dispatch(createVoteAction(anecdote));
     const message = `you voted '${content}'`;
-    showNotificationWithTimeout(dispatch, message);
+    dispatch(createSetNotificationAction(message));
   };
 
   return (
