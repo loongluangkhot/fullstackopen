@@ -12,7 +12,7 @@ const App = () => {
     _();
   }, []);
 
-  return <div>{message}</div>;
+  return <div className="container">{message}</div>;
 };
 
 export default App;
