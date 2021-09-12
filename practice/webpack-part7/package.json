@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --mode=development",
+    "build": "webpack --mode=production",
     "start": "webpack server --mode=development",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
+    "axios": "^0.21.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   }

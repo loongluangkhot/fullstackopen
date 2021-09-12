@@ -1,18 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
+import "./index.css";
 
-// const App = () => <div>hello webpack</div>;
+const useNotes = (url) => {
+  const [notes, setNotes] = useState([])
+  useEffect(() => {
+    axios.get(url).then(response => {
+      setNotes(response.data)
+    })
+  }, [url])
+  return notes
+}
 
 const App = () => {
-  const [message, setmessage] = useState("");
+  const [counter, setCounter] = useState(0);
+  const [values, setValues] = useState([]);
+  const notes = useNotes(BACKEND_URL)
 
-  useEffect(() => {
-    const _ = async () => {
-      await setmessage("hello webpack");
-    };
-    _();
-  }, []);
+  const handleClick = () => {
+    setCounter(counter + 1);
+    setValues(values.concat(counter));
+  };
 
-  return <div className="container">{message}</div>;
+  return (
+    <div className="container">
+      hello webpack {counter} clicks
+      <button onClick={handleClick}>press</button>
+      <div>{notes.length} notes on server {BACKEND_URL}</div>
+    </div>
+  );
 };
 
 export default App;
