@@ -5,13 +5,18 @@
   "main": "library-backend.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node library-backend.js"
+    "start": "node library-backend.js",
+    "dev": "cross-env NODE_ENV=development nodemon --watch . library-backend.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "apollo-server": "^3.3.0",
+    "dotenv": "^10.0.0",
     "graphql": "^15.5.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.10",
+    "mongoose-unique-validator": "^3.0.0",
     "uuid": "^8.3.2"
   }
 }
