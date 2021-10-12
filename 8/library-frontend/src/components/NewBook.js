@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import Notify from "./Notify";
 import { ALL_AUTHORS, ALL_BOOKS, CREATE_BOOK } from "../queries";
+import { useNotify } from "../hooks";
 
 const NewBook = (props) => {
   const [title, setTitle] = useState("");
@@ -9,7 +10,7 @@ const NewBook = (props) => {
   const [published, setPublished] = useState("");
   const [genre, setGenre] = useState("");
   const [genres, setGenres] = useState([]);
-  const [error, seterror] = useState("");
+  const [error, seterror, notify] = useNotify();
   const [createBook] = useMutation(CREATE_BOOK, {
     refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
     onError: (err) => {
@@ -19,13 +20,6 @@ const NewBook = (props) => {
 
   if (!props.show) {
     return null;
-  }
-
-  const notify = (message) => {
-    seterror(message);
-    setTimeout(() => {
-      seterror(null);
-    }, 10000);
   }
 
   const submit = async (event) => {

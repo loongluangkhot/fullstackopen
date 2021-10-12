@@ -3,12 +3,13 @@ import { useQuery, useMutation } from "@apollo/client";
 import Select from "react-select";
 import Notify from "./Notify";
 import { ALL_AUTHORS, UPDATE_AUTHOR } from "../queries";
+import { useNotify } from "../hooks";
 
 const EditAuthor = (props) => {
   const [options, setoptions] = useState([]);
   const [selectedAuthor, setselectedAuthor] = useState();
   const [born, setborn] = useState("");
-  const [error, seterror] = useState("");
+  const [error, notify, seterror] = useNotify();
   const [updateAuthor] = useMutation(UPDATE_AUTHOR, {
     refetchQueries: [{ query: ALL_AUTHORS }],
     onError: (err) => {
@@ -31,13 +32,6 @@ const EditAuthor = (props) => {
   if (!props.show) {
     return null;
   }
-
-  const notify = (message) => {
-    seterror(message);
-    setTimeout(() => {
-      seterror(null);
-    }, 10000);
-  };
 
   const submit = async (e) => {
     e.preventDefault();
