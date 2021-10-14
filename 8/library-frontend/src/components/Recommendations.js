@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
-import { ALL_BOOKS } from "../queries";
+import { ALL_BOOKS, ME } from "../queries";
 import BooksTable from "./BooksTable";
 
-const Books = (props) => {
+const Recommendations = (props) => {
   const [books, setbooks] = useState([]);
   const [filteredBooks, setfilteredBooks] = useState([]);
-  const [genreFilter, setgenreFilter] = useState(null);
+  const [user, setuser] = useState(null);
   const allBooksResult = useQuery(ALL_BOOKS);
+  const meResult = useQuery(ME);
 
   useEffect(() => {
     if (allBooksResult.data && allBooksResult.data.allBooks) {
@@ -16,39 +17,33 @@ const Books = (props) => {
   }, [allBooksResult]);
 
   useEffect(() => {
-    if (genreFilter === null) {
-      setfilteredBooks(books);
-    } else {
+    if (meResult.data && meResult.data.me) {
+      setuser(meResult.data.me);
+    }
+  }, [meResult]);
+
+  useEffect(() => {
+    if (user) {
       const newFilteredBooks = books.filter((book) =>
-        book.genres.includes(genreFilter)
+        book.genres.includes(user.favoriteGenre)
       );
       setfilteredBooks(newFilteredBooks);
     }
-  }, [books, genreFilter]);
+  }, [books, user]);
 
   if (!props.show) {
     return null;
   }
 
-  const genres = [...new Set(books.flatMap((book) => book.genres))];
-
   return (
     <div>
-      <h2>books</h2>
+      <h2>recommendations</h2>
       <p>
-        in genre: <b>{genreFilter || "all genres"}</b>
+        books in your favourite genre: <b>{user?.favoriteGenre}</b>
       </p>
       <BooksTable books={filteredBooks} />
-      <div>
-        {genres.map((genre) => (
-          <button key={genre} onClick={() => setgenreFilter(genre)}>
-            {genre}
-          </button>
-        ))}
-        <button onClick={() => setgenreFilter(null)}>all genres</button>
-      </div>
     </div>
   );
 };
 
-export default Books;
+export default Recommendations;
