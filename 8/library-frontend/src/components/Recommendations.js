@@ -6,7 +6,9 @@ import BooksTable from "./BooksTable";
 const Recommendations = (props) => {
   const [books, setbooks] = useState([]);
   const [user, setuser] = useState(null);
-  const [getAllBooks, allBooksResult] = useLazyQuery(ALL_BOOKS);
+  const [getAllBooks, allBooksResult] = useLazyQuery(ALL_BOOKS, {
+    fetchPolicy: "cache-and-network",
+  });
   const meResult = useQuery(ME);
 
   useEffect(() => {

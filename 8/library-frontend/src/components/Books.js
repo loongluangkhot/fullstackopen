@@ -7,7 +7,9 @@ const Books = (props) => {
   const [books, setbooks] = useState([]);
   const [genres, setgenres] = useState([]);
   const [genreFilter, setgenreFilter] = useState(null);
-  const [getAllBooks, allBooksResult] = useLazyQuery(ALL_BOOKS);
+  const [getAllBooks, allBooksResult] = useLazyQuery(ALL_BOOKS, {
+    fetchPolicy: "cache-and-network",
+  });
 
   useEffect(() => {
     if (allBooksResult.data && allBooksResult.data.allBooks) {
