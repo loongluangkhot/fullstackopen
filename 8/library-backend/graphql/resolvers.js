@@ -31,15 +31,21 @@ const resolvers = {
     allBooks: async (root, args) => {
       // TODO: handle query with params
       try {
-        const books = await Book.find({}).populate("author");
+        let books = await Book.find({}).populate("author");
+        const authorNameFilter = args.author;
+        if(authorNameFilter) {
+          books = books.filter(book => book.author.name === authorNameFilter);
+        }
+        const genreFilter = args.genre;
+        if(genreFilter) {
+          books = books.filter(book => book.genres.includes(genreFilter));
+        }
         return books;
       } catch (e) {
         throw new UserInputError(e.message, {
           invalidArgs: args,
         });
       }
-      // const authorName = args.author;
-      // const genre = args.genre;
     },
     allAuthors: async () => {
       return await Author.find({});

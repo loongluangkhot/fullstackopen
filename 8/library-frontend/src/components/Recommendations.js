@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import { ALL_BOOKS, ME } from "../queries";
 import BooksTable from "./BooksTable";
 
 const Recommendations = (props) => {
   const [books, setbooks] = useState([]);
-  const [filteredBooks, setfilteredBooks] = useState([]);
   const [user, setuser] = useState(null);
-  const allBooksResult = useQuery(ALL_BOOKS);
+  const [getAllBooks, allBooksResult] = useLazyQuery(ALL_BOOKS);
   const meResult = useQuery(ME);
 
   useEffect(() => {
@@ -24,12 +23,10 @@ const Recommendations = (props) => {
 
   useEffect(() => {
     if (user) {
-      const newFilteredBooks = books.filter((book) =>
-        book.genres.includes(user.favoriteGenre)
-      );
-      setfilteredBooks(newFilteredBooks);
+      const favouriteGenre = user.favoriteGenre;
+      getAllBooks({ variables: { genre: favouriteGenre } });
     }
-  }, [books, user]);
+  }, [user, getAllBooks]);
 
   if (!props.show) {
     return null;
@@ -41,7 +38,7 @@ const Recommendations = (props) => {
       <p>
         books in your favourite genre: <b>{user?.favoriteGenre}</b>
       </p>
-      <BooksTable books={filteredBooks} />
+      <BooksTable books={books} />
     </div>
   );
 };
