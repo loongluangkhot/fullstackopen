@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const Book = require("../models/book");
 const Author = require("../models/author");
 const User = require("../models/user");
+const { PubSub } = require("graphql-subscriptions");
 
 const { JWT_SECRET, PASSWORD } = process.env;
 
@@ -11,6 +12,11 @@ const checkAuth = (currentUser) => {
   if (!currentUser) {
     throw new AuthenticationError("not authenticated");
   }
+};
+
+const pubsub = new PubSub();
+const EVENTS = {
+  BOOK_ADDED: "BOOK_ADDED",
 };
 
 const resolvers = {
@@ -33,12 +39,12 @@ const resolvers = {
       try {
         let books = await Book.find({}).populate("author");
         const authorNameFilter = args.author;
-        if(authorNameFilter) {
-          books = books.filter(book => book.author.name === authorNameFilter);
+        if (authorNameFilter) {
+          books = books.filter((book) => book.author.name === authorNameFilter);
         }
         const genreFilter = args.genre;
-        if(genreFilter) {
-          books = books.filter(book => book.genres.includes(genreFilter));
+        if (genreFilter) {
+          books = books.filter((book) => book.genres.includes(genreFilter));
         }
         return books;
       } catch (e) {
@@ -78,6 +84,12 @@ const resolvers = {
         };
         const book = new Book(bookDto);
         await book.save();
+
+        // publish
+        pubsub.publish(EVENTS.BOOK_ADDED, {
+          bookAdded: book,
+        });
+
         return book;
       } catch (e) {
         throw new UserInputError(e.message, {
@@ -126,6 +138,12 @@ const resolvers = {
       };
       const value = jwt.sign(userForToken, JWT_SECRET);
       return { value };
+    },
+  },
+
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator([EVENTS.BOOK_ADDED]),
     },
   },
 };

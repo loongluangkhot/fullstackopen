@@ -8,7 +8,7 @@ const Books = (props) => {
   const [genres, setgenres] = useState([]);
   const [genreFilter, setgenreFilter] = useState(null);
   const [getAllBooks, allBooksResult] = useLazyQuery(ALL_BOOKS, {
-    fetchPolicy: "cache-and-network",
+    variables: { genre: genreFilter },
   });
 
   useEffect(() => {
@@ -24,7 +24,13 @@ const Books = (props) => {
   }, [allBooksResult]);
 
   useEffect(() => {
-    getAllBooks({ variables: { genre: genreFilter } });
+    if (allBooksResult.data) {
+      console.log(genreFilter);
+      allBooksResult.refetch();
+    } else {
+      getAllBooks();
+    }
+    // eslint-disable-next-line
   }, [genreFilter, getAllBooks]);
 
   if (!props.show) {
