@@ -1,10 +1,10 @@
 const { UserInputError } = require("apollo-server-errors");
-const mongoose = require("mongoose");
+const { PubSub } = require("graphql-subscriptions");
 const jwt = require("jsonwebtoken");
 const Book = require("../models/book");
 const Author = require("../models/author");
 const User = require("../models/user");
-const { PubSub } = require("graphql-subscriptions");
+const { booksByAuthorLoader } = require("./loaders");
 
 const { JWT_SECRET, PASSWORD } = process.env;
 
@@ -23,7 +23,8 @@ const resolvers = {
   Author: {
     bookCount: async (root) => {
       const authorId = root.id;
-      return await Book.count({ author: mongoose.Types.ObjectId(authorId) });
+      const booksByAuthor = await booksByAuthorLoader.load(authorId);
+      return booksByAuthor.length;
     },
   },
 
