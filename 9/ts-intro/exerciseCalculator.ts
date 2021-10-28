@@ -1,6 +1,6 @@
-interface ICalculateExercisesParams {
+export interface ICalculateExercisesParams {
   target: number;
-  dailyExerciseHours: number[];
+  daily_exercises: number[];
 }
 
 const parseCalculateExercisesArguments = (
@@ -20,14 +20,14 @@ const parseCalculateExercisesArguments = (
     }
     return {
       target,
-      dailyExerciseHours,
+      daily_exercises: dailyExerciseHours,
     };
   } else {
     throw new Error("Provided values were not numbers!");
   }
 };
 
-interface IResult {
+interface ICalculateExercisesResult {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -37,10 +37,10 @@ interface IResult {
   average: number;
 }
 
-const calculateExercises = (
+export const calculateExercises = (
   dailyExerciseHours: number[],
   target: number
-): IResult => {
+): ICalculateExercisesResult => {
   const periodLength = dailyExerciseHours.length;
   const trainingDays = dailyExerciseHours.filter((hr) => hr).length;
   const average = dailyExerciseHours.reduce((a, b) => a + b) / periodLength;
@@ -69,10 +69,12 @@ const calculateExercises = (
   };
 };
 
-const calculateExercisesParams = parseCalculateExercisesArguments(process.argv);
-console.log(
-  calculateExercises(
-    calculateExercisesParams.dailyExerciseHours,
-    calculateExercisesParams.target
-  )
-);
+if(require.main === module) {
+  const calculateExercisesParams = parseCalculateExercisesArguments(process.argv);
+  console.log(
+    calculateExercises(
+      calculateExercisesParams.daily_exercises,
+      calculateExercisesParams.target
+    )
+  );
+}

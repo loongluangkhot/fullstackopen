@@ -1,6 +1,6 @@
 interface ICalculateBmiParams {
-  heightInCm: number;
-  weightInKg: number;
+  height: number;
+  weight: number;
 }
 
 const parseCalculateBmiArguments = (
@@ -11,15 +11,15 @@ const parseCalculateBmiArguments = (
 
   if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
     return {
-      heightInCm: Number(args[2]),
-      weightInKg: Number(args[3]),
+      height: Number(args[2]),
+      weight: Number(args[3]),
     };
   } else {
     throw new Error("Provided values were not numbers!");
   }
 };
 
-const calculateBmi = (heightInCm: number, weightInKg: number): string => {
+export const calculateBmi = (heightInCm: number, weightInKg: number): string => {
   const bmi = weightInKg / ((heightInCm / 100) ^ 2);
   if (bmi < 16) {
     return "Underweight (Severe thinness)";
@@ -40,7 +40,9 @@ const calculateBmi = (heightInCm: number, weightInKg: number): string => {
   }
 };
 
-const calculateBmiParams = parseCalculateBmiArguments(process.argv);
-console.log(
-  calculateBmi(calculateBmiParams.heightInCm, calculateBmiParams.weightInKg)
-);
+if(require.main === module) {
+  const calculateBmiParams = parseCalculateBmiArguments(process.argv);
+  console.log(
+    calculateBmi(calculateBmiParams.height, calculateBmiParams.weight)
+  );
+}
